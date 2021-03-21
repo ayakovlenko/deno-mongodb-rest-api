@@ -1,5 +1,5 @@
 import { Application, Router, RouterContext } from "./deps_oak.ts";
-import { getNotes } from "./routes.ts";
+import { createNote, getNotes } from "./routes.ts";
 
 const router = new Router();
 
@@ -11,9 +11,7 @@ router
   .get("/notes/:id", (ctx: RouterContext) => {
     ctx.response.body = "get single node";
   })
-  .post("/notes", (ctx: RouterContext) => {
-    ctx.response.body = "create note";
-  })
+  .post("/notes", createNote)
   .put("/notes/:id", (ctx: RouterContext) => {
     ctx.response.body = "update single node";
   })
