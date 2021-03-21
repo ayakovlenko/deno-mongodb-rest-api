@@ -1,0 +1,14 @@
+version: "3.8"
+services:
+  server:
+    image: hayd/alpine-deno:1.8.1
+    working_dir: /app/
+    ports:
+      - 8081:8080
+    volumes:
+      - .:/app
+    init: true
+    command: >
+      sh -c "export DENO_DIR=./deno_dir/ &&
+             deno cache ./deps_oak.ts &&
+             deno run --unstable --watch --allow-net ./server.ts"
