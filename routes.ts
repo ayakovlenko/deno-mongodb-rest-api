@@ -71,8 +71,17 @@ const updateNote = async (ctx: RouterContext) => {
   }
 };
 
-const deleteNote = (ctx: RouterContext) => {
-  ctx.response.body = "delete single note";
+const deleteNote = async (ctx: RouterContext) => {
+  const id = ctx.params.id;
+  const deleteCount = await notesCollection.deleteOne({
+    _id: new Bson.ObjectId(id),
+  });
+  if (!deleteCount) {
+    ctx.response.status = 404;
+    ctx.response.body = { message: "note does not exist" };
+    return;
+  }
+  ctx.response.status = 204;
 };
 
 export { createNote, deleteNote, getNote, getNotes, updateNote };
