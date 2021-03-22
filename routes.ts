@@ -48,13 +48,24 @@ const updateNote = async (ctx: RouterContext) => {
   const body = ctx.request.body();
   if (body.type === "json") {
     const note = <Note> await body.value;
-    await notesCollection.updateOne({
+    const { modifiedCount } = await notesCollection.updateOne({
       _id: new Bson.ObjectId(id),
     }, {
       $set: {
         ...note,
       },
     });
+
+    if (!modifiedCount) {
+      ctx.response.status = 404;
+      ctx.response.body = { message: "note does not exist" };
+      return;
+    }
+    // deno-lint-ignore no-explicit-any
+    const _note: any = await notesCollection.findOne({
+      _id: new Bson.ObjectId(id),
+    });
+    ctx.response.body = _note;
   } else {
     ctx.response.status = 400;
   }
