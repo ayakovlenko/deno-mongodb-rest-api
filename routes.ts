@@ -1,4 +1,5 @@
 import { RouterContext } from "./deps_oak.ts";
+import { Bson } from "./deps_mongo.ts";
 import { db } from "./mongo.ts";
 
 // TODO: move
@@ -13,6 +14,15 @@ const notesCollection = db.collection("notes");
 const getNotes = async (ctx: RouterContext): Promise<void> => {
   const notes = await notesCollection.find();
   ctx.response.body = notes;
+};
+
+const getNote = async (ctx: RouterContext) => {
+  const id = ctx.params.id;
+  // deno-lint-ignore no-explicit-any
+  const note: any = await notesCollection.findOne({
+    _id: new Bson.ObjectId(id),
+  });
+  ctx.response.body = note;
 };
 
 const createNote = async (ctx: RouterContext): Promise<void> => {
@@ -33,4 +43,4 @@ const createNote = async (ctx: RouterContext): Promise<void> => {
   }
 };
 
-export { createNote, getNotes };
+export { createNote, getNote, getNotes };
