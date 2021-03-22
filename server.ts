@@ -1,5 +1,11 @@
-import { Application, Router, RouterContext } from "./deps_oak.ts";
-import { createNote, getNote, getNotes } from "./routes.ts";
+import { Application, Router } from "./deps_oak.ts";
+import {
+  createNote,
+  deleteNote,
+  getNote,
+  getNotes,
+  updateNote,
+} from "./routes.ts";
 
 const router = new Router();
 
@@ -10,12 +16,8 @@ router
   .get("/notes", getNotes)
   .get("/notes/:id", getNote)
   .post("/notes", createNote)
-  .put("/notes/:id", (ctx: RouterContext) => {
-    ctx.response.body = "update single node";
-  })
-  .delete("/notes/:id", (ctx: RouterContext) => {
-    ctx.response.body = "delete single node";
-  });
+  .put("/notes/:id", updateNote)
+  .delete("/notes/:id", deleteNote);
 
 const app = new Application();
 

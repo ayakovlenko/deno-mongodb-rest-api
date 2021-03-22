@@ -43,4 +43,25 @@ const createNote = async (ctx: RouterContext): Promise<void> => {
   }
 };
 
-export { createNote, getNote, getNotes };
+const updateNote = async (ctx: RouterContext) => {
+  const id = ctx.params.id;
+  const body = ctx.request.body();
+  if (body.type === "json") {
+    const note = <Note> await body.value;
+    await notesCollection.updateOne({
+      _id: new Bson.ObjectId(id),
+    }, {
+      $set: {
+        ...note,
+      },
+    });
+  } else {
+    ctx.response.status = 400;
+  }
+};
+
+const deleteNote = (ctx: RouterContext) => {
+  ctx.response.body = "delete single note";
+};
+
+export { createNote, deleteNote, getNote, getNotes, updateNote };
